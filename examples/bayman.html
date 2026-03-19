@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head><title>Bayman — Smoke Test</title></head>
+<body style="margin: 0; background: #111; display: flex; align-items: center; justify-content: center; height: 100vh;">
+<div id="game"></div>
+<script type="module">
+  import { GameHost } from "../src/host/game_host.js"
+  import { BaymanEngine } from "../src/games/bayman/engine.js"
+  import { BaymanRenderer } from "../src/games/bayman/renderer.js"
+  import * as BaymanConfig from "../src/games/bayman/config.js"
+
+  const host = new GameHost(document.getElementById("game"), {
+    engine: BaymanEngine,
+    renderer: BaymanRenderer,
+    config: {
+      ...BaymanConfig,
+      containerBackground: "#1a1a2e",
+      gameName: "bayman",
+      gameInstructions: {
+        title: "Bayman!",
+        description: "Dodge obstacles on your trike ride through the bay.",
+        controls: [
+          ["Space / Click", "Jump"],
+          ["Q", "Quit"],
+        ],
+      },
+      getAssetManifest: () => ({
+        effects: ["jump", "land", "collision", "powerup", "smash"],
+        ambient: ["engine-ride", "engine-rev"],
+      }),
+    },
+    canvas: { width: 600, height: 300 },
+    resolveAsset: (path) => `../assets/bayman/${path}`,
+    handleKey: (event, engine) => {
+      if (event.code === "Space") engine.jump()
+    },
+    handleClick: (engine) => engine.jump(),
+    onScore: (score) => console.log("Score:", score),
+  })
+  host.start()
+</script>
+</body>
+</html>
