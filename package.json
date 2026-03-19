@@ -1,0 +1,12 @@
+{
+  "name": "@unio/outport-arcade",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./host": "./src/host/game_host.js",
+    "./games/*": "./src/games/*/index.js",
+    "./assets/*": "./assets/*"
+  }
+}
