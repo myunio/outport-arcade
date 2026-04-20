@@ -66,19 +66,26 @@ export const DORY_Y = WATERLINE_Y - 4
 // Timing
 // ---------------------------------------------------------------------------
 
-/** @type {number} Frames before a landed piece locks in place. */
-export const LOCK_DELAY = 30
+/** @type {number} Seconds before a landed piece locks in place. */
+export const LOCK_DELAY = 0.5
 
 /** @type {number} Lines cleared per level. */
 export const LINES_PER_LEVEL = 10
 
 /**
- * Drop interval per level. Index = level number.
- * Classic NES-style speed curve. After level 9, pieces fall at 1 frame per row.
+ * Drop interval per level in seconds. Index = level number.
+ * Classic NES-style speed curve.
  *
  * @type {number[]}
  */
-export const DROP_INTERVALS = [48, 43, 38, 33, 28, 23, 18, 13, 8, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1]
+export const DROP_INTERVALS = [
+  0.800, 0.717, 0.633, 0.550, 0.467,
+  0.383, 0.300, 0.217, 0.133, 0.100,
+  0.083, 0.083, 0.083, 0.067, 0.067,
+  0.067, 0.050, 0.050, 0.050, 0.033,
+  0.033, 0.033, 0.033, 0.033, 0.033,
+  0.033, 0.033, 0.033, 0.033, 0.017,
+]
 
 // ---------------------------------------------------------------------------
 // Scoring
