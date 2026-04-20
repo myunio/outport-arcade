@@ -39,6 +39,12 @@ export const TARGET_FRAME_MS = 1000 / 60
 const MAX_DT = 3
 
 export class BaseEngine {
+  /** @type {string[]} Phases that trigger onGameOver and stop the loop. */
+  static terminalPhases = ["DEAD"]
+
+  /** @type {string[]} Phases where Q-to-quit is allowed (deliberate, never mid-gameplay). */
+  static quitPhases = ["START", "DEAD"]
+
   /**
    * @param {Object} callbacks
    * @param {function(Object): void} callbacks.onRender - Called each frame with state snapshot
@@ -219,7 +225,7 @@ export class BaseEngine {
     this.update(dt)
     this._onRender(this.getState())
 
-    if (this.phase === "DEAD") {
+    if (this.constructor.terminalPhases.includes(this.phase)) {
       this._onGameOver(Math.floor(this.score))
       return
     }
