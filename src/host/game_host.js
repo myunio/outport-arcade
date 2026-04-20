@@ -110,16 +110,18 @@ export class GameHost {
 
     const config = this._options.config || {}
 
-    // Load assets (audio + sprites)
+    // Load assets (audio + sprites). Games that bring their own audio
+    // system (e.g., Kung Fu's synth-based KungFuAudio) pass `options.audio`
+    // and skip the shared AudioManager entirely.
     const manifest = config.getAssetManifest?.() || {}
     const { audio, sprites } = await loadAssets(manifest, {
       resolveAsset: this._options.resolveAsset,
     })
-    this._audio = audio
+    this._audio = this._options.audio ?? audio
     this._sprites = sprites
 
-    // Set custom storage key for audio volume persistence
-    if (this._options.storageKey) {
+    // Set custom storage key for audio volume persistence (AudioManager only).
+    if (this._options.storageKey && !this._options.audio) {
       this._audio.storageKey = this._options.storageKey
     }
 
@@ -182,10 +184,18 @@ export class GameHost {
     this._input = new InputManager(canvas)
     this._engine.input = this._input
 
-    this._input.onKey = (e) => this._routeKey(e)
+    this._input.onKey = (e) => {
+      this._audio?.resume()
+      this._routeKey(e)
+    }
 
     if (this._options.handleClick) {
-      this._input.onClick(() => this._options.handleClick(this._engine))
+      this._input.onClick(() => {
+        this._audio?.resume()
+        this._options.handleClick(this._engine)
+      })
+    } else {
+      this._input.onClick(() => this._audio?.resume())
     }
 
     // Start!
