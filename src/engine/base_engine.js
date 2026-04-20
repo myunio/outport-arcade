@@ -32,13 +32,6 @@
  * @module games/engine/base_engine
  */
 
-/**
- * @deprecated Kept for backward-compat with arcade's pre-sync codjigger.
- * Task 6 (drift reconciliation) replaces codjigger with the seconds-based
- * version from outport-app-v2, after which this export can be removed.
- */
-export const TARGET_FRAME_MS = 1000 / 60
-
 export class BaseEngine {
   /** @type {string[]} Phases that trigger onGameOver and stop the loop. */
   static terminalPhases = ["DEAD"]
