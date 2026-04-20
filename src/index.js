@@ -25,3 +25,6 @@ export * as OverboardConfig from "./games/overboard/config.js"
 
 export { WoodpileEngine, WoodpileRenderer } from "./games/woodpile/index.js"
 export * as WoodpileConfig from "./games/woodpile/config.js"
+
+export { KungFuEngine, KungFuRenderer } from "./games/kungfu/index.js"
+export * as KungFuConfig from "./games/kungfu/config.js"

@@ -134,7 +134,7 @@ export class BaymanEngine extends BaseEngine {
     this.invincibleTimer = 0
     this.powerupFlash = null
     this.powerupFlashTimer = 0
-    this.lastPowerupFrame = -POWERUP_COOLDOWN
+    this.lastPowerupTime = -POWERUP_COOLDOWN
     this.groundOffset = 0
   }
 
@@ -165,12 +165,12 @@ export class BaymanEngine extends BaseEngine {
   /**
    * Updates game state for one frame. Called by BaseEngine each tick.
    *
-   * @param {number} dt - Delta-time factor (1.0 = 60fps)
+   * @param {number} dt - Delta-time in seconds (~0.0167 at 60fps)
    */
   update(dt) {
     if (this.phase !== PHASE.PLAYING) return
 
-    this.speed = Math.min(BASE_SPEED + this.frameCount * SPEED_INCREASE, MAX_SPEED)
+    this.speed = Math.min(BASE_SPEED + this.elapsed * SPEED_INCREASE, MAX_SPEED)
     this.groundOffset += this.speed * dt
     this.addScore(this.speed * 0.05 * dt)
 
@@ -233,7 +233,7 @@ export class BaymanEngine extends BaseEngine {
     // Update score popups (float upward and fade)
     for (let i = this.scorePopups.length - 1; i >= 0; i--) {
       const pop = this.scorePopups[i]
-      pop.y -= 1.2 * dt
+      pop.y -= 72 * dt
       pop.life -= dt
       if (pop.life <= 0) this.scorePopups.splice(i, 1)
     }
@@ -304,7 +304,7 @@ export class BaymanEngine extends BaseEngine {
   /** @private Spawns a power-up if conditions are met. */
   _maybeSpawnPowerup() {
     if (this.score < POWERUP_MIN_SCORE) return
-    if (this.frameCount - this.lastPowerupFrame < POWERUP_COOLDOWN) return
+    if (this.elapsed - this.lastPowerupTime < POWERUP_COOLDOWN) return
     if (this.powerups.length > 0) return
 
     if (Math.random() < 0.008) {
@@ -316,7 +316,7 @@ export class BaymanEngine extends BaseEngine {
         width: type.width,
         height: type.height,
       })
-      this.lastPowerupFrame = this.frameCount
+      this.lastPowerupTime = this.elapsed
     }
   }
 
@@ -340,7 +340,7 @@ export class BaymanEngine extends BaseEngine {
         this.playerY > pu.y
       ) {
         this.powerupFlash = pu.type
-        this.powerupFlashTimer = 90 // ~1.5 seconds at 60fps
+        this.powerupFlashTimer = 1.5 // seconds
         this.powerups.splice(i, 1)
         this.invincibleTimer = INVINCIBLE_DURATION
         this.addScore(POWERUP_BONUS)
@@ -371,8 +371,8 @@ export class BaymanEngine extends BaseEngine {
           const smashX = obs.x + obs.width / 2
           const smashY = GROUND_Y - obs.height / 2
           this._emitSmashParticles(smashX, smashY, obs.type)
-          this.scorePopups.push({ x: smashX, y: smashY - 10, text: `+${SMASH_BONUS}`, life: 40 })
-          this.shakeTimer = 6
+          this.scorePopups.push({ x: smashX, y: smashY - 10, text: `+${SMASH_BONUS}`, life: 0.667 })
+          this.shakeTimer = 0.1
           this.obstacles.splice(i, 1)
           this.addScore(SMASH_BONUS)
           this.audio?.effects.play("smash", { pitchVariance: 0.15 })
@@ -410,11 +410,11 @@ export class BaymanEngine extends BaseEngine {
       x,
       y,
       count: 12,
-      speed: [2, 6],
-      lifetime: [30, 50],
+      speed: [120, 360],
+      lifetime: [0.5, 0.833],
       colors: [color],
       spread: Math.PI * 2,
-      gravity: 0.15,
+      gravity: 540,
       size: 4,
     })
   }

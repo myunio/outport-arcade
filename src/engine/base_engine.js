@@ -1,7 +1,7 @@
 /**
  * Base game engine — shared foundation for all Outport mini-games.
  *
- * Provides the game loop (requestAnimationFrame with delta-time scaling),
+ * Provides the game loop (requestAnimationFrame with seconds-based delta-time),
  * a phase machine for game state transitions, scoring with high score
  * tracking, and a state snapshot system for renderer communication.
  *
@@ -32,13 +32,13 @@
  * @module games/engine/base_engine
  */
 
-/** @type {number} Target frame duration in ms (60fps baseline). */
-export const TARGET_FRAME_MS = 1000 / 60
-
-/** @type {number} Maximum delta-time factor to prevent runaway updates after tab switches. */
-const MAX_DT = 3
-
 export class BaseEngine {
+  /** @type {string[]} Phases that trigger onGameOver and stop the loop. */
+  static terminalPhases = ["DEAD"]
+
+  /** @type {string[]} Phases where Q-to-quit is allowed (deliberate, never mid-gameplay). */
+  static quitPhases = ["START", "DEAD"]
+
   /**
    * @param {Object} callbacks
    * @param {function(Object): void} callbacks.onRender - Called each frame with state snapshot
@@ -191,7 +191,7 @@ export class BaseEngine {
    * Subclasses MUST implement this.
    *
    * @abstract
-   * @param {number} dt - Delta-time factor (1.0 = one 60fps frame)
+   * @param {number} dt - Delta-time in seconds (e.g., ~0.016 at 60fps)
    */
   update(dt) {
     // Override in subclass
@@ -202,8 +202,10 @@ export class BaseEngine {
   // ---------------------------------------------------------------------------
 
   /**
-   * Main loop. Computes delta-time, calls update and render,
-   * checks for game over.
+   * Main loop. Computes delta-time in seconds, calls update and render,
+   * checks for terminal phase (game over). dt is capped at 0.05s (50ms)
+   * to prevent runaway updates after tab switches. frameCount accumulates
+   * at ~60/sec regardless of display refresh rate (framerate-independent).
    *
    * @private
    * @param {number} now - Timestamp from requestAnimationFrame
@@ -211,15 +213,15 @@ export class BaseEngine {
   _loop(now) {
     const elapsed = now - this._lastTime
     this._lastTime = now
-    const dt = Math.min(elapsed / TARGET_FRAME_MS, MAX_DT)
+    const dt = Math.min(elapsed / 1000, 0.05)
 
-    this.frameCount += dt
+    this.frameCount += dt * 60
     this.elapsed += elapsed / 1000
 
     this.update(dt)
     this._onRender(this.getState())
 
-    if (this.phase === "DEAD") {
+    if (this.constructor.terminalPhases.includes(this.phase)) {
       this._onGameOver(Math.floor(this.score))
       return
     }

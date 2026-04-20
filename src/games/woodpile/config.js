@@ -1,4 +1,3 @@
-// app/javascript/games/woodpile/config.js
 /**
  * Woodpile Tycoon — Game configuration.
  *

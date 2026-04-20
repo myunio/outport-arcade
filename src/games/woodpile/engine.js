@@ -1,4 +1,3 @@
-// app/javascript/games/woodpile/engine.js
 /**
  * Woodpile Tycoon — Core game engine.
  *
@@ -70,8 +69,8 @@ export class WoodpileEngine extends BaseEngine {
     if (this.phase !== PHASE.PLAYING) return
 
     this.logs += this.tier.perClick
-    this.clickAnim = 15
-    this.shakeTimer = 3
+    this.clickAnim = 0.25
+    this.shakeTimer = 0.05
     this.totalClicks++
     this.idleEarned = 0
 
@@ -82,12 +81,12 @@ export class WoodpileEngine extends BaseEngine {
         x: CANVAS_WIDTH * 0.35,
         y: 280,
         count: 6,
-        speed: [2, 5],
-        lifetime: [20, 35],
+        speed: [120, 300],
+        lifetime: [0.333, 0.583],
         colors,
         spread: Math.PI * 1.5,
         angle: -Math.PI / 2,
-        gravity: 0.15,
+        gravity: 540,
         size: 3,
       })
     }
@@ -95,13 +94,18 @@ export class WoodpileEngine extends BaseEngine {
     this._checkTierUp()
   }
 
+  /**
+   * Advance game state by one tick.
+   *
+   * @param {number} dt - Delta time in seconds since last frame.
+   */
   update(dt) {
     if (this.phase !== PHASE.PLAYING) return
 
-    // Tick idle income
+    // Tick idle income (idleRate is already logs/second)
     const idleRate = this.tier.idleRate
     if (idleRate > 0) {
-      this.idleAccum += (idleRate / 60) * dt
+      this.idleAccum += idleRate * dt
       if (this.idleAccum >= 1) {
         const earned = Math.floor(this.idleAccum)
         this.logs += earned
@@ -163,8 +167,8 @@ export class WoodpileEngine extends BaseEngine {
     this.tierIndex = index
     // Set logs to the threshold of the previous tier (start of this tier)
     this.logs = index > 0 ? TIERS[index - 1].threshold : 0
-    this.transformTimer = 60
-    this.shakeTimer = 10
+    this.transformTimer = 1.0
+    this.shakeTimer = 0.167
   }
 
   // ---
@@ -173,8 +177,8 @@ export class WoodpileEngine extends BaseEngine {
     const tier = this.tier
     if (this.logs >= tier.threshold && this.tierIndex < TIERS.length - 1) {
       this.tierIndex++
-      this.transformTimer = 60
-      this.shakeTimer = 10
+      this.transformTimer = 1.0
+      this.shakeTimer = 0.167
 
       // Big particle burst
       if (this.particles) {
@@ -184,11 +188,11 @@ export class WoodpileEngine extends BaseEngine {
             x: 250 + i * 100,
             y: 200,
             count: 10,
-            speed: [2, 6],
-            lifetime: [25, 45],
+            speed: [120, 360],
+            lifetime: [0.417, 0.75],
             colors,
             spread: Math.PI * 2,
-            gravity: 0.12,
+            gravity: 432,
             size: 4,
           })
         }

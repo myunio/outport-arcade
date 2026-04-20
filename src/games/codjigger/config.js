@@ -46,14 +46,14 @@ export const BITE_MAX_DELAY = 9000
 /** @type {number} Window to react to a bite in ms. */
 export const BITE_WINDOW = 1800
 
-/** @type {number} Frames to animate pulling the fish up. */
-export const PULL_DURATION = 50
+/** @type {number} Seconds to animate pulling the fish up (was 50 frames at 60fps). */
+export const PULL_DURATION = 0.833
 
-/** @type {number} Frames to display caught fish. */
-export const CAUGHT_DISPLAY = 90
+/** @type {number} Seconds to display caught fish (was 90 frames at 60fps). */
+export const CAUGHT_DISPLAY = 1.5
 
-/** @type {number} Frames to display miss message. */
-export const MISSED_DISPLAY = 60
+/** @type {number} Seconds to display miss message (was 60 frames at 60fps). */
+export const MISSED_DISPLAY = 1.0
 
 // ---------------------------------------------------------------------------
 // Game phases

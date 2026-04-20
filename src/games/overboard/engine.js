@@ -165,7 +165,7 @@ export class OverboardEngine extends BaseEngine {
   /**
    * Updates game state for one frame. Called by BaseEngine each tick.
    *
-   * @param {number} dt - Delta-time factor (1.0 = 60fps)
+   * @param {number} dt - Delta-time in seconds since last frame
    */
   update(dt) {
     if (this.phase !== PHASE.PLAYING) return
@@ -329,7 +329,7 @@ export class OverboardEngine extends BaseEngine {
       this.lines += fullRows.length
       this.level = Math.floor(this.lines / LINES_PER_LEVEL)
       this.clearingRows = fullRows
-      this.clearTimer = 15 // ~250ms animation at 60fps
+      this.clearTimer = 0.25 // 250ms line-clear animation
     } else {
       this._spawnPiece()
     }
@@ -421,7 +421,7 @@ export class OverboardEngine extends BaseEngine {
     if (this.level < DROP_INTERVALS.length) {
       return DROP_INTERVALS[this.level]
     }
-    return 1
+    return 0.017
   }
 
   /**

@@ -3,16 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "./dist/outport-arcade.esm.js",
-  "module": "./dist/outport-arcade.esm.js",
+  "description": "Outport mini-games engine + games (Bayman, Cod Jigger, Overboard, Woodpile, Kung Fu Overdrive)",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/myunio/outport-arcade.git"
+  },
+  "main": "./src/index.js",
+  "module": "./src/index.js",
   "exports": {
     ".": {
-      "import": "./dist/outport-arcade.esm.js",
+      "import": "./src/index.js",
       "default": "./dist/outport-arcade.esm.js"
     },
-    "./assets/*": "./assets/*"
+    "./host": "./src/host/game_host.js",
+    "./games/*": "./src/games/*/index.js",
+    "./assets/*": "./assets/*",
+    "./assets-manifest": "./src/assets-manifest.js"
   },
+  "files": [
+    "src",
+    "assets",
+    "dist"
+  ],
   "scripts": {
+    "prepare": "pnpm run build",
     "build": "node build.js"
   },
   "devDependencies": {

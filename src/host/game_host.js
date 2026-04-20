@@ -317,9 +317,9 @@ export class GameHost {
       return
     }
 
-    // --- Q to quit (START, DEAD — deliberate, never mid-gameplay) ---
+    // --- Q to quit (deliberate, never mid-gameplay) ---
     if (key === "q" || key === "Q") {
-      if (phase === "START" || phase === "DEAD") {
+      if (this._engine.constructor.quitPhases.includes(phase)) {
         e.preventDefault()
         this.destroy()
       }
@@ -329,7 +329,7 @@ export class GameHost {
     // --- Escape: pause during gameplay, do nothing otherwise ---
     if (key === "Escape") {
       e.preventDefault()
-      if (phase !== "START" && phase !== "DEAD") {
+      if (!this._engine.constructor.quitPhases.includes(phase)) {
         this.togglePause()
       }
       return
@@ -337,7 +337,7 @@ export class GameHost {
 
     // --- P: pause/resume during gameplay only ---
     if (key === "p" || key === "P") {
-      if (phase !== "START" && phase !== "DEAD") {
+      if (!this._engine.constructor.quitPhases.includes(phase)) {
         e.preventDefault()
         this.togglePause()
       }

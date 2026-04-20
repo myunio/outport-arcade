@@ -5,12 +5,12 @@
  * Manages game state, bite timing, and fish counting.
  * Extends BaseEngine for game loop, phase machine, and scoring.
  *
- * All timers are frame-based and scaled by delta-time so the game
- * runs consistently regardless of display refresh rate.
+ * All timers are in seconds, decremented by dt (seconds) each frame
+ * so the game runs consistently regardless of display refresh rate.
  *
  * @module games/codjigger/engine
  */
-import { BaseEngine, TARGET_FRAME_MS } from "../../engine/base_engine.js"
+import { BaseEngine } from "../../engine/base_engine.js"
 import {
   BITE_MIN_DELAY,
   BITE_MAX_DELAY,
@@ -101,7 +101,7 @@ export class CodJiggerEngine extends BaseEngine {
   /**
    * Game-specific update logic — called each frame by BaseEngine.
    *
-   * @param {number} dt - Delta-time factor (1.0 = one 60fps frame)
+   * @param {number} dt - Delta-time in seconds since last frame
    */
   update(dt) {
     // Gentle jigger bob in water
@@ -111,7 +111,7 @@ export class CodJiggerEngine extends BaseEngine {
       this.biteTimer -= dt
       if (this.biteTimer <= 0) {
         this.setPhase("BITE")
-        this.biteWindowTimer = Math.floor(BITE_WINDOW / TARGET_FRAME_MS)
+        this.biteWindowTimer = BITE_WINDOW / 1000
       }
     }
 
@@ -183,6 +183,6 @@ export class CodJiggerEngine extends BaseEngine {
    */
   _scheduleBite() {
     const delayMs = BITE_MIN_DELAY + Math.random() * (BITE_MAX_DELAY - BITE_MIN_DELAY)
-    this.biteTimer = Math.floor(delayMs / TARGET_FRAME_MS)
+    this.biteTimer = delayMs / 1000
   }
 }
