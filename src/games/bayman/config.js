@@ -34,24 +34,24 @@ export const GROUND_Y = CANVAS_HEIGHT - 50
 // Physics
 // ---------------------------------------------------------------------------
 
-/** @type {number} Gravity acceleration per frame. */
-export const GRAVITY = 0.8
+/** @type {number} Gravity acceleration in px/s². */
+export const GRAVITY = 2880
 
-/** @type {number} Initial vertical velocity on jump (negative = up). */
-export const JUMP_FORCE = -13
+/** @type {number} Initial vertical velocity on jump in px/s (negative = up). */
+export const JUMP_FORCE = -780
 
 // ---------------------------------------------------------------------------
 // Speed & difficulty
 // ---------------------------------------------------------------------------
 
-/** @type {number} Starting horizontal scroll speed in px/frame. */
-export const BASE_SPEED = 5
+/** @type {number} Starting horizontal scroll speed in px/s. */
+export const BASE_SPEED = 300
 
-/** @type {number} Speed increase per frame (progressive difficulty). */
-export const SPEED_INCREASE = 0.001
+/** @type {number} Speed increase per elapsed second (progressive difficulty). */
+export const SPEED_INCREASE = 3.6
 
-/** @type {number} Maximum speed cap — difficulty plateaus here. */
-export const MAX_SPEED = 14
+/** @type {number} Maximum speed cap in px/s — difficulty plateaus here. */
+export const MAX_SPEED = 840
 
 // ---------------------------------------------------------------------------
 // Obstacles
@@ -98,8 +98,8 @@ export const OBSTACLE_HITBOX_INSET = 5
 // Power-ups
 // ---------------------------------------------------------------------------
 
-/** @type {number} Duration of invincibility in frames (~4 seconds at 60fps). */
-export const INVINCIBLE_DURATION = 240
+/** @type {number} Duration of invincibility in seconds. */
+export const INVINCIBLE_DURATION = 4
 
 /** @type {number} Y position where power-ups float (above ground, requires jump). */
 export const POWERUP_Y = GROUND_Y - 90
@@ -107,8 +107,8 @@ export const POWERUP_Y = GROUND_Y - 90
 /** @type {number} Minimum score before power-ups start spawning. */
 export const POWERUP_MIN_SCORE = 15
 
-/** @type {number} Minimum frames between power-up spawns. */
-export const POWERUP_COOLDOWN = 300
+/** @type {number} Minimum seconds between power-up spawns. */
+export const POWERUP_COOLDOWN = 5
 
 // ---------------------------------------------------------------------------
 // Game phases
