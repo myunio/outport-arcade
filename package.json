@@ -26,6 +26,11 @@
     "assets",
     "dist"
   ],
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
   "scripts": {
     "prepare": "pnpm run build",
     "build": "node build.js"
